@@ -125,6 +125,11 @@ target_godot_suffix="$target_godot_suffix.$target_arch"
 host_godot="$GODOT_DIR/bin/godot.$host_godot_suffix"
 target_godot="$GODOT_DIR/bin/libgodot.$target_godot_suffix.$lib_suffix"
 
+if [ "$host_platform" = "macos" ] && [ "$host_arch" = "arm64" ]
+then
+    host_build_options="$host_build_options metal=true"
+fi
+
 if [ ! -x $host_godot ] || [ $force_host_rebuild -eq 1 ]
 then
     rm -f $host_godot
@@ -146,6 +151,14 @@ then
 
     echo "Successfully updated the GDExtension API."
     exit 0
+fi
+
+if [ "$target_arch" = "arm64" ]
+then
+    if [ "$target_platform" = "ios" ] || [ "$†arget_platform" = "macos" ]
+    then
+        target_build_options="$target_build_options metal=true"
+    fi
 fi
 
 cd $GODOT_DIR

@@ -11,7 +11,7 @@ class GodotApp: ObservableObject {
     
     func createInstance(scene: String) {
         touches = [UITouch?](repeating: nil, count: maxTouchCount)
-        instance = GodotInstance.create(args: ["--main-pack", (Bundle.main.resourcePath ?? ".") + "/" + scene, "--rendering-driver", "vulkan", "--rendering-method", "mobile", "--display-driver", "embedded"])
+        instance = GodotInstance.create(args: ["--main-pack", (Bundle.main.resourcePath ?? ".") + "/" + scene, "--rendering-driver", "metal", "--rendering-method", "mobile", "--display-driver", "embedded"])
     }
     
     func getTouchId(touch: UITouch) -> Int {
@@ -90,7 +90,7 @@ class UIGodotAppView : UIView {
         if let instance = app?.instance {
             if instance.isStarted() {
                 if embedded == nil {
-                    embedded = DisplayServerEmbedded(nativeHandle: DisplayServer.shared.handle)
+                    embedded = DisplayServerEmbedded(nativeHandle: DisplayServer.shared.handle!)
                 }
                 
                 embedded.resizeWindow(size: Vector2i(x: Int32(self.bounds.size.width * self.contentScaleFactor), y: Int32(self.bounds.size.height * self.contentScaleFactor)), id: Int32(DisplayServer.mainWindowId))
@@ -474,7 +474,7 @@ class UIGodotWindow : UIView {
         windowLayer.frame = self.bounds
         if inited {
             if embedded == nil {
-                embedded = DisplayServerEmbedded(nativeHandle: DisplayServer.shared.handle)
+                embedded = DisplayServerEmbedded(nativeHandle: DisplayServer.shared.handle!)
             }
             embedded.resizeWindow(size: Vector2i(x: Int32(self.bounds.size.width * self.contentScaleFactor), y: Int32(self.bounds.size.height * self.contentScaleFactor)), id: subwindow.getWindowId())
         }
